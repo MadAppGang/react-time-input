@@ -23,8 +23,11 @@ class TimeInput extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  componentWillReceiveProps({ time }) {
-    if (time && time !== this.props.time) {
+  componentDidUpdate(prevProps) {
+    const { time } = this.props;
+    const timeHasChanged = time !== prevProps.time;
+
+    if (time && timeHasChanged) {
       this.updateTime(time);
     }
   }
@@ -33,6 +36,10 @@ class TimeInput extends Component {
     this.setState({
       value: Time.stringify(time),
     });
+  }
+
+  getValue(time) {
+    return Time.stringify(time);
   }
 
   handleChange(event) {
@@ -82,6 +89,10 @@ TimeInput.propTypes = {
     minutes: PropTypes.number,
     prefix: PropTypes.oneOf([Time.AM, Time.PM]),
   }),
+};
+
+TimeInput.defaultProps = {
+  time: defaultTime,
 };
 
 export default TimeInput;
