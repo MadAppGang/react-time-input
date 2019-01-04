@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import { to0Format } from './utils';
+import { AM, PM, zerofy } from './utils';
 import './index.css';
-
-const AM = 'am';
-const PM = 'pm';
-
 class TimeInput extends Component {
   constructor(props) {
     super(props);
@@ -37,14 +33,6 @@ class TimeInput extends Component {
     this.setState({
       value: this.getTimeString(time),
     });
-  }
-
-  setInvalid() {
-    this.setState({ invalid: true });
-  }
-
-  setValid() {
-    this.setState({ invalid: false });
   }
 
   validate(value) {
@@ -88,8 +76,7 @@ class TimeInput extends Component {
       minutes = 0;
     }
 
-    const defaultPrefix = AM;
-    let prefix = defaultPrefix;
+    let prefix = AM;
 
     if (value.endsWith('p') || value.endsWith('pm')) {
       prefix = PM;
@@ -100,7 +87,7 @@ class TimeInput extends Component {
     }
 
     hours = Number(hours);
-    minutes = isNaN((minutes)) ? Number(minutes.slice(0, 1) * 10) : Number(minutes);
+    minutes = Number(isNaN(minutes) ? minutes.slice(0, 1) * 10 : minutes);
 
     if (hours > 12) {
       hours -= 12;
@@ -130,34 +117,28 @@ class TimeInput extends Component {
       minutes = 0;
     }
     
-    return { hours, minutes, prefix };
+    return Object.freeze({
+      hours, minutes, prefix,
+    });
   }
 
   handleChange(event) {
-    let { value } = event.target;
+    const { value } = event.target;
 
-    if (!this.validate(value)) {
-      this.setInvalid();
-      this.setState({ value });
-      return;
-    }
-
-    this.setState({ value });
-    this.setValid();
+    this.setState({
+      value,
+      invalid: !this.validate(value),
+    });
   }
 
   handleBlur(event) {
     const { value } = event.target;
 
-    if (!value) {
-      this.setInvalid();
-      this.setState({ value });
-      return;
+    if (value) {
+      this.props.onChange(this.parse(value));
+    } else {
+      this.setState({ value, invalid: true });
     }
-
-    const time = this.parse(value);
-
-    this.props.onChange(time);
   }
 
   handleKeyDown(event) {
@@ -172,7 +153,7 @@ class TimeInput extends Component {
 
   getTimeString(time) {
     const hours = time.hours === 0 ? 12 : time.hours;
-    return `${hours}:${to0Format(time.minutes)} ${time.prefix}`;
+    return `${hours}:${zerofy(time.minutes)} ${time.prefix}`;
   }
   
   renderErrorMessage() {

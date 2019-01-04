@@ -1,5 +1,5 @@
 {
-  "name": "react-time-input",
+  "name": "@dprovodnikov/time-input",
   "version": "1.0.0",
   "description": "time input for react applications",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MadAppGang/react-selections.git"
+    "url": "git+https://github.com/dprovodnikov/react-time-input.git"
   },
   "keywords": [
     "react",
