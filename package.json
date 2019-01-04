@@ -1,6 +1,6 @@
 {
   "name": "@dprovodnikov/time-input",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "time input for react applications",
   "main": "dist/index.js",
   "scripts": {

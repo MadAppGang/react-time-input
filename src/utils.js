@@ -7,6 +7,8 @@ export const stringify = (time) => {
   return `${hours}:${zerofy(time.minutes)} ${time.prefix}`;
 };
 
+const numeric = str => str.replace(/\D/g, '');
+
 export const parse = (timeString) => {
   const isString = typeof timeString === 'string';
 
@@ -25,15 +27,18 @@ export const parse = (timeString) => {
 
   if (value.includes(':')) {
     [hours, minutes] = value.slice(0, 5).split(':');
+
     if (hours < 10) {
       [hours, minutes] = value.slice(0, 4).split(':');
     }
   } else {
-    hours = value.slice(0, 2);
-    if (isNaN(hours)) {
+    if (numeric(value).length === 3) {
       hours = value.slice(0, 1);
+      minutes = value.slice(1, 3);
+    } else {
+      hours = value.slice(0, 2);
+      minutes = value.slice(2, 4);
     }
-    minutes = value.slice(2, 4);
   }
 
   if (!minutes || isNaN(minutes)) {
@@ -91,13 +96,5 @@ export const isValid = (timeString) => {
     return false;
   } 
 
-  timeString = timeString.toLowerCase()
-    .replace(/\s/, '')
-    .replace(':', '')
-    .replace('am', '')
-    .replace('pm', '')
-    .replace('a', '')
-    .replace('p', '');
-
-  return !isNaN(timeString);
+  return !isNaN(numeric(timeString));
 };
