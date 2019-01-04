@@ -1,20 +1,20 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { AM, PM, zerofy } from './utils';
+import * as Time from './utils';
+
+const ENTER = 'Enter';
+const ENTER_KEYCODE = 13;
+
+const defaultTime = Time.parse('12:00 PM');
+
 class TimeInput extends Component {
   constructor(props) {
     super(props);
 
-    const defaultTime = {
-      hours: 0,
-      minutes: 0,
-      prefix: AM,
-    };
-
-    const value = props.time || defaultTime;
+    const time = props.time || defaultTime;
 
     this.state = {
-      value: this.getTimeString(value),
+      value: Time.stringify(time),
       invalid: false,
     };
 
@@ -31,94 +31,7 @@ class TimeInput extends Component {
 
   updateTime(time) {
     this.setState({
-      value: this.getTimeString(time),
-    });
-  }
-
-  validate(value) {
-    if (!value) {
-      return false;
-    } 
-
-    value = value.toLowerCase()
-      .replace(/\s/, '')
-      .replace(':', '')
-      .replace('am', '')
-      .replace('pm', '')
-      .replace('a', '')
-      .replace('p', '');
-
-    return !isNaN(value);
-  }
-
-  parse(input) {
-    const value = input
-      .replace(/\s/, '')
-      .replace('-', '')
-      .toLowerCase();
-
-    let hours, minutes;
-
-    if (value.includes(':')) {
-      [hours, minutes] = value.slice(0, 5).split(':');
-      if (hours < 10) {
-        [hours, minutes] = value.slice(0, 4).split(':');
-      }
-    } else {
-      hours = value.slice(0, 2);
-      if (isNaN(hours)) {
-        hours = value.slice(0, 1);
-      }
-      minutes = value.slice(2, 4);
-    }
-
-    if (!minutes || isNaN(minutes)) {
-      minutes = 0;
-    }
-
-    let prefix = AM;
-
-    if (value.endsWith('p') || value.endsWith('pm')) {
-      prefix = PM;
-    }
-
-    if (value.endsWith('a') || value.endsWith('am')) {
-      prefix = AM;
-    }
-
-    hours = Number(hours);
-    minutes = Number(isNaN(minutes) ? minutes.slice(0, 1) * 10 : minutes);
-
-    if (hours > 12) {
-      hours -= 12;
-      if (hours <= 24) {
-        prefix = PM;
-      }
-    }
-
-    if (hours > 12) {
-      hours = 12;
-    }
-
-    if (minutes > 59) {
-      hours += Math.floor(minutes / 60);
-      minutes = Math.floor(minutes % 60);
-    }
-
-    if (hours === 12 && prefix === AM) {
-      hours = 0;
-    }
-
-    if (isNaN(hours)) {
-      hours = 12;
-    }
-
-    if (isNaN(minutes)) {
-      minutes = 0;
-    }
-    
-    return Object.freeze({
-      hours, minutes, prefix,
+      value: Time.stringify(time),
     });
   }
 
@@ -127,7 +40,7 @@ class TimeInput extends Component {
 
     this.setState({
       value,
-      invalid: !this.validate(value),
+      invalid: !Time.isValid(value),
     });
   }
 
@@ -135,7 +48,7 @@ class TimeInput extends Component {
     const { value } = event.target;
 
     if (value) {
-      this.props.onChange(this.parse(value));
+      this.props.onChange(Time.parse(value));
     } else {
       this.setState({ value, invalid: true });
     }
@@ -146,16 +59,11 @@ class TimeInput extends Component {
       return;
     }
     
-    if (event.key === 'Enter' || event.keyCode === 13) {
+    if (event.key === ENTER || event.keyCode === ENTER_KEYCODE) {
       this.handleBlur(event);
     }
   }
 
-  getTimeString(time) {
-    const hours = time.hours === 0 ? 12 : time.hours;
-    return `${hours}:${zerofy(time.minutes)} ${time.prefix}`;
-  }
-  
   render() {
     return this.props.children({
       invalid: this.state.invalid,
@@ -169,6 +77,11 @@ class TimeInput extends Component {
 
 TimeInput.propTypes = {
   children: PropTypes.func.isRequired,
+  time: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    prefix: PropTypes.oneOf([Time.AM, Time.PM]),
+  }),
 };
 
 export default TimeInput;
