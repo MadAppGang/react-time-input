@@ -1,0 +1,61 @@
+.ti-time-input-wrap {
+  display: inline-block;
+  position: relative;
+} 
+
+.ti-time-input {
+  outline: none;
+  padding: 5px 12px;
+  font: normal 14px 'Helvetica';
+  color: #3d3d3d;
+  border: none;
+  border-bottom: 3px solid #eee;
+  background: #eee;
+  border-radius: 2px;
+  width: 85px;
+}
+
+.ti-time-input:focus {
+  border-bottom-color: #21bdb1;
+}
+
+.ti-time-input--invalid {
+  border-bottom-color: #e57171;
+}
+
+.ti-time-input--invalid:focus {
+  border-bottom-color: #e57171;
+}
+
+.ti-time-input__error {
+  position: absolute;
+  width: 100%;
+  background: #3d3d3d;
+  border-radius: 4px;
+  padding: 5px;
+  top: 0;
+  transform: translateY(-120%);
+  font: normal 14px 'Helvetica';
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation-name: error-popup-appear;
+  animation-fill-mode: forwards;
+  animation-duration: 150ms;
+  animation-timing-function: ease-out;
+  pointer-events: none;
+}
+
+.ti-time-input__error:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 90%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 5px;
+  border-color: #3d3d3d transparent transparent transparent;
+}
