@@ -4,13 +4,13 @@ Smart time input for react applications
 
 ![Example](https://i.ibb.co/kmDcn6n/ezgif-com-video-to-gif.gif)
 
-### Installation
+## Installation
 
 ```bash
 $ npm install @dprovodnikov/time-input
 ```
 
-### Usage example
+## Usage example
 
 You provide your own input representation using render props
 
@@ -19,10 +19,14 @@ import TimeInput from '@dprovodnikov/time-input';
 
 ...
 
+this.state = {
+  time: { hours: 0, minutes: 0, prefix: 'am' }, // i/o format time
+};
+
 return (
   <TimeInput
     time={this.state.time}
-    onChange={time => this.setState({ time })}
+    onChange={time => this.setState({ time })} // { hours, minutes, prefix }
   >
     {({ value, onChange, onKeyDown, onBlur }) => (
       <input
@@ -36,7 +40,7 @@ return (
 );
 ```
 
-### Available props
+## Available props
 
 | Prop | Type | Description |
 |:----:|:----:|:-----------:|
