@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { AM, PM, zerofy } from './utils';
-import './index.css';
 class TimeInput extends Component {
   constructor(props) {
     super(props);
@@ -156,39 +156,19 @@ class TimeInput extends Component {
     return `${hours}:${zerofy(time.minutes)} ${time.prefix}`;
   }
   
-  renderErrorMessage() {
-    if (!this.state.invalid) {
-      return null;
-    }
-
-    return (
-      <div className="ti-time-input__error">
-        Invalid time
-      </div>
-    );
-  }
-
   render() {
-    const { invalid } = this.state;
-    const baseClass = 'ti-time-input';
-    const invalidClass = `${baseClass}--invalid`;
-    const computedClass = `${baseClass} ${invalid ? invalidClass : ''}`;
-
-    return (
-      <div className="ti-time-input-wrap">
-        <input
-          className={computedClass}
-          value={this.state.value}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-          onMouseDown={e => e.stopPropagation()}
-          onBlur={this.handleBlur}
-          onFocus={e => e.target.select()}
-        />
-        {this.renderErrorMessage()}
-      </div>
-    );
+    return this.props.children({
+      invalid: this.state.invalid,
+      value: this.state.value,
+      onChange: this.handleChange,
+      onBlur: this.handleBlur,
+      onKeyDown: this.handleKeyDown,
+    });
   }
 }
+
+TimeInput.propTypes = {
+  children: PropTypes.func.isRequired,
+};
 
 export default TimeInput;
