@@ -74,5 +74,7 @@ describe('parse', () => {
     expect(parse('8p')).toEqual({ hours: 8, minutes: 0, prefix: 'pm' });
     expect(parse('8a')).toEqual({ hours: 8, minutes: 0, prefix: 'am' });
     expect(parse('100g')).toEqual({ hours: 1, minutes: 0, prefix: 'am' });
+    expect(parse('010')).toEqual({ hours: 0, minutes: 10, prefix: 'am' });
+    expect(parse('25:82')).toEqual({ hours: 0, minutes: 0, prefix: 'am' });
   });
 });

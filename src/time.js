@@ -77,18 +77,25 @@ export const parse = (timeString) => {
 
   if (hours > 12) {
     hours -= 12;
+
     if (hours <= 24) {
       prefix = PM;
     }
   }
 
-  if (hours > 12) {
-    hours = 12;
-  }
-
   if (minutes > 59) {
     hours += Math.floor(minutes / 60);
     minutes = Math.floor(minutes % 60);
+
+    if (hours === 0) {
+      minutes = 0;
+    }
+  }
+
+  if (hours > 12) {
+    hours = 12;
+    minutes = 0;
+    prefix = AM;
   }
 
   if (hours === 12 && prefix === AM) {
