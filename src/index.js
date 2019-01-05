@@ -1,45 +1,35 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as Time from './utils';
-
-const ENTER = 'Enter';
-const ENTER_KEYCODE = 13;
-
-const defaultTime = Time.parse('12:00 PM');
+import { onEnterKey, when } from './utils';
+import * as Time from './time';
 
 class TimeInput extends Component {
   constructor(props) {
     super(props);
 
-    const time = props.time || defaultTime;
-
     this.state = {
-      value: Time.stringify(time),
+      value: Time.stringify(props.time) || '12:00 pm',
       invalid: false,
     };
 
+    this.dispatchChange = this.dispatchChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidUpdate(prevProps) {
     const { time } = this.props;
-    const timeHasChanged = time !== prevProps.time;
+    const hasTimeChanged = time !== prevProps.time;
 
-    if (time && timeHasChanged) {
-      this.updateTime(time);
+    if (time && hasTimeChanged) {
+      this.updateValue(time);
     }
   }
 
-  updateTime(time) {
+  updateValue(time) {
     this.setState({
       value: Time.stringify(time),
     });
-  }
-
-  getValue(time) {
-    return Time.stringify(time);
   }
 
   handleChange(event) {
@@ -51,33 +41,27 @@ class TimeInput extends Component {
     });
   }
 
-  handleBlur(event) {
-    const { value } = event.target;
-
-    if (value) {
-      this.props.onChange(Time.parse(value));
-    } else {
-      this.setState({ value, invalid: true });
-    }
+  dispatchChange({ target }) {
+    this.props.onChange(Time.parse(target.value));
   }
 
-  handleKeyDown(event) {
+  handleBlur(event) {
     if (this.state.invalid) {
       return;
     }
-    
-    if (event.key === ENTER || event.keyCode === ENTER_KEYCODE) {
-      this.handleBlur(event);
-    }
+
+    this.dispatchChange(event);
   }
 
   render() {
+    const { value, invalid } = this.state;
+
     return this.props.children({
-      invalid: this.state.invalid,
-      value: this.state.value,
+      value,
+      invalid,
       onChange: this.handleChange,
       onBlur: this.handleBlur,
-      onKeyDown: this.handleKeyDown,
+      onKeyDown: onEnterKey(this.dispatchChange),
     });
   }
 }
@@ -89,10 +73,6 @@ TimeInput.propTypes = {
     minutes: PropTypes.number,
     prefix: PropTypes.oneOf([Time.AM, Time.PM]),
   }),
-};
-
-TimeInput.defaultProps = {
-  time: defaultTime,
 };
 
 export default TimeInput;

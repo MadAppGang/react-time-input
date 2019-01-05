@@ -20,7 +20,7 @@ import TimeInput from '@dprovodnikov/time-input';
 ...
 
 this.state = {
-  time: { hours: 0, minutes: 0, prefix: 'am' }, // i/o format time
+  time: { hours: 0, minutes: 0, prefix: 'am' }, // i/o time format
 };
 
 return (
