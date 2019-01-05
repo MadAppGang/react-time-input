@@ -37,7 +37,7 @@ class TimeInput extends Component {
 
     this.setState({
       value,
-      invalid: !Time.isValid(value),
+      invalid: !Time.isAcceptable(value),
     });
   }
 
