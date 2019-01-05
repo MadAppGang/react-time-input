@@ -86,10 +86,6 @@ export const parse = (timeString) => {
   if (minutes > 59) {
     hours += Math.floor(minutes / 60);
     minutes = Math.floor(minutes % 60);
-
-    if (hours === 0) {
-      minutes = 0;
-    }
   }
 
   if (hours > 12) {
@@ -100,14 +96,6 @@ export const parse = (timeString) => {
 
   if (hours === 12 && prefix === AM) {
     hours = 0;
-  }
-
-  if (isNaN(hours)) {
-    hours = 12;
-  }
-
-  if (isNaN(minutes)) {
-    minutes = 0;
   }
 
   return Object.freeze({
