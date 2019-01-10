@@ -7,7 +7,7 @@ Smart time input for react applications
 ## Installation
 
 ```bash
-$ npm install @dprovodnikov/time-input
+$ npm install @madappgang/time-input
 ```
 
 ## Usage example
@@ -15,7 +15,7 @@ $ npm install @dprovodnikov/time-input
 You provide your own input representation using render props
 
 ```javascript
-import TimeInput from '@dprovodnikov/time-input';
+import TimeInput from '@madappgang/time-input';
 
 ...
 
